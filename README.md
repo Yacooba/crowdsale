@@ -1,5 +1,5 @@
-[![tests](https://github.com/yacooba/contracts/workflows/tests/badge.svg)](https://github.com/yacooba/contracts/actions)
-[![codecov](https://codecov.io/gh/Yacooba/contracts/branch/develop/graph/badge.svg?token=XY8ZMSBK1N)](https://codecov.io/gh/Yacooba/contracts)
+[![tests](https://github.com/yacooba/crowdsale/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/yacooba/crowdsale/actions)
+[![codecov](https://codecov.io/gh/Yacooba/crowdsale/branch/main/graph/badge.svg?token=QadEglgSqU)](https://codecov.io/gh/Yacooba/crowdsale)
 
 # Yacooba Crowdsale
 
