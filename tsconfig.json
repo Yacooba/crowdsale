@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    /* Visit https://www.typescriptlang.org/docs/handbook/tsconfig-json.html to read more about this file */
+    "module": "commonJS",
+    "target": "es2019",
+    "lib": ["es2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["scripts/**/*", "test/**/*", "hardhat.config.ts"]
+}

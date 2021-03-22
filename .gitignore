@@ -1,0 +1,27 @@
+node_modules
+.DS_store
+.vscode
+.mocharc.json
+
+.eslintcache
+
+#Hardhat files
+cache
+artifacts
+
+#Typechain
+typechain
+
+#Logs
+.log
+
+#Coverage
+coverage
+coverage.json
+.coverage_artifacts
+.coverage_contracts
+.coverage_cache
+
+#Environments
+.env
+
