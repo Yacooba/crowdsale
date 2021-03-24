@@ -1,5 +1,6 @@
-//SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+//SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.2;
 
 import "./Crowdsale.sol";
 import "./validation/PausableCrowdsale.sol";
@@ -9,6 +10,15 @@ import "./validation/WhitelistCrowdsale.sol";
 import "./distribution/TokenLockCrowdsale.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
+/**
+ * @title YacoobaCrowdsale
+ * @dev Yacooba crowdsale accepts purchases within a time frame and from a list of
+ * pre approved accounts, it is also possible to pause token purchases at any time.
+ * The crowdsale is defined by a total cap of tokens to be sold, nevertheless each
+ * account has a minimum and a maximum token cap that should be respected.
+ * Tokens aren't directly sent to the beneficiary account after purchase, they will
+ * be stored in a vault for a period of time.
+ */
 contract YacoobaCrowdsale is
   Crowdsale,
   PausableCrowdsale,
@@ -23,7 +33,7 @@ contract YacoobaCrowdsale is
     IERC20 newToken,
     uint256 newCap,
     uint256 newBeneficiaryMinCap,
-    uint256 newBeneficiaryHardCap,
+    uint256 newBeneficiaryMaxCap,
     address newTokenWallet,
     uint256 newOpeningTime,
     uint256 newClosingTime,
@@ -31,7 +41,7 @@ contract YacoobaCrowdsale is
   )
     Crowdsale(newRate, newFundWallet, newToken, newTokenWallet)
     PausableCrowdsale()
-    CappedCrowdsale(newCap, newBeneficiaryMinCap, newBeneficiaryHardCap)
+    CappedCrowdsale(newCap, newBeneficiaryMinCap, newBeneficiaryMaxCap)
     TimedCrowdsale(newOpeningTime, newClosingTime)
     TokenLockCrowdsale(newAdditionalLockPeriod)
     WhitelistCrowdsale()

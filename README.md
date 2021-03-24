@@ -3,18 +3,15 @@
 
 # Yacooba Crowdsale
 
-# Requirements
-
-`NodeJs >= 14`
+Yacooba crowdsale accepts purchases within a time frame and from a list of pre approved accounts, it is also possible to pause token purchases at any time.
+The crowdsale is defined by a total cap of tokens to be sold, nevertheless each account has a minimum and a maximum token cap that should be respected.
+Tokens aren't directly sent to the beneficiary account after purchase, they will be stored in a vault for a period of time.
 
 ## Env Variables
 
-(ask Carlos)
+`.env` file:
 
-```
-COINMARKETCAP_API_KEY
-INFURA_API_KEY
-```
+- `COINMARKETCAP_API_KEY` (only for `npm run test:gas`) get yours at https://coinmarketcap.com/api/
 
 ## Compile Contracts
 
@@ -49,4 +46,4 @@ Require messages:
 
 Comments:
 
-- Follow [NatSec Format](https://solidity.readthedocs.io/en/v0.5.8/natspec-format.html)
+- Follow [NatSec Format](https://docs.soliditylang.org/en/latest/natspec-format.html)

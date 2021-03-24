@@ -1,6 +1,6 @@
-//SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -32,11 +32,9 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
 
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
-  // So, if you are using a rate of 1 with a ERC20Detailed token with 3 decimals called YAC
-  // 1 wei will give you 1 unit, or 0.001 YAC.
   uint256 private _rate;
 
-  // Amount of wei raised
+  // Amount of tokens raised
   uint256 private _tokensRaised;
 
   // Address of the wallet containing YAC tokens to be bought
@@ -53,8 +51,7 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
 
   /**
    * @dev The rate is the conversion between wei and the smallest and indivisible
-   * token unit. So, if you are using a rate of 1 with a ERC20Detailed token
-   * with 3 decimals called YAC, 1 wei will give you 1 unit, or 0.001 YAC.
+   * token unit. E.g. a token with 3 decimals, 1 wei will give you 1 unit, or 0.001 YAC.
    * @param newRate Number of token units a buyer gets per wei
    * @param newFundWallet Address where collected funds (Ether) will be forwarded to
    * @param newToken Address of the token being sold (YAC)
@@ -115,13 +112,17 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
     return _rate;
   }
 
+  /**
+   * @dev Sets a new rate
+   * @param newRate the new rate to be set
+   */
   function setRate(uint256 newRate) public onlyOwner {
     require(newRate != 0, "CS: rate is 0");
     _rate = newRate;
   }
 
   /**
-   * @return the amount of wei raised.
+   * @return the amount of tokens raised.
    */
   function tokensRaised() public view returns (uint256) {
     return _tokensRaised;
@@ -183,8 +184,8 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
   }
 
   /**
-   * @dev Executed when a purchase has been validated and is ready to be executed. Doesn't necessarily emit/send
-   * tokens.
+   * @dev Executed when a purchase has been validated and is ready to be executed.
+   * Doesn't necessarily emit/send tokens.
    * @param beneficiary Address receiving the tokens
    * @param tokenAmount Number of tokens to be purchased
    */
