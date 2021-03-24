@@ -92,7 +92,7 @@ describe('YacoobaCrowdsale', function () {
     })
 
     it('Should have the correct beneficiaryHardCap value', async () => {
-      expect(await crowdsale.beneficiaryHardCap()).to.eq(beneficiaryHardCapEther.mul(rate))
+      expect(await crowdsale.beneficiaryMaxCap()).to.eq(beneficiaryHardCapEther.mul(rate))
     })
 
     it('Should have the correct openingTime value', async () => {

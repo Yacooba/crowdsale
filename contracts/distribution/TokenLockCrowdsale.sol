@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.3;
+pragma solidity ^0.8.2;
 
 import "../validation/TimedCrowdsale.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 /**
  * @title TokenLockCrowdsale
  * @dev Crowdsale that locks tokens from withdrawal until it ends the crowdsale
- * and the additional lock period
+ * and the additional lock period.
  */
 abstract contract TokenLockCrowdsale is TimedCrowdsale {
   uint256 private _additionalLockPeriod;
@@ -16,6 +16,11 @@ abstract contract TokenLockCrowdsale is TimedCrowdsale {
   mapping(address => uint256) private _balances;
   __unstable__TokenVault private _vault;
 
+  /**
+   * @dev Tokens will be transfered to a vault when purchased, and they will remain locked
+   * until crowdsale ends, plus an additional period (`newAdditionalLockPeriod`).
+   * @param newAdditionalLockPeriod addtional time in seconds that tokens should be locked.
+   */
   constructor(uint256 newAdditionalLockPeriod) {
     require(newAdditionalLockPeriod != 0, "TLC: additional lock period is 0");
     _vault = new __unstable__TokenVault();
@@ -37,6 +42,8 @@ abstract contract TokenLockCrowdsale is TimedCrowdsale {
   }
 
   /**
+   * @dev Checks the balance of an account.
+   * @param account address for a given account.
    * @return the balance of an account.
    */
   function balanceOf(address account) public view returns (uint256) {
@@ -58,9 +65,8 @@ abstract contract TokenLockCrowdsale is TimedCrowdsale {
   }
 
   /**
-   * @dev Overrides parent by storing due balances, and delivering tokens to the vault instead of the end user. This
-   * ensures that the tokens will be available by the time they are withdrawn (which may not be the case if
-   * `_deliverTokens` was called later).
+   * @dev Overrides parent by storing due balances, and delivering tokens to the vault instead of the end user.
+   * This ensures that the tokens will be available by the time they are withdrawn (which may not be the case if `_deliverTokens` was called later).
    * @param beneficiary Token purchaser
    * @param tokenAmount Amount of tokens purchased
    */
@@ -73,7 +79,7 @@ abstract contract TokenLockCrowdsale is TimedCrowdsale {
 /**
  * @title __unstable__TokenVault
  * @dev Similar to an Escrow for tokens, this contract allows its primary account to spend its tokens as it sees fit.
- * This contract is an internal helper for PostDeliveryCrowdsale, and should not be used outside of this context.
+ * This contract is an internal helper for TokenLockCrowdsale, and should not be used outside of this context.
  */
 // solhint-disable-next-line contract-name-camelcase
 contract __unstable__TokenVault is Ownable {
