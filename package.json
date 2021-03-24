@@ -1,9 +1,8 @@
 {
   "name": "crowdsale",
   "version": "0.0.1",
-  "private": true,
   "author": "Yacooba",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "description": "Yacooba private crowdsale contracts",
   "repository": {
     "type": "git",
