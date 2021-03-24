@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.3;
 
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -32,11 +32,9 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
 
   // How many token units a buyer gets per wei.
   // The rate is the conversion between wei and the smallest and indivisible token unit.
-  // So, if you are using a rate of 1 with a ERC20Detailed token with 3 decimals called YAC
-  // 1 wei will give you 1 unit, or 0.001 YAC.
   uint256 private _rate;
 
-  // Amount of wei raised
+  // Amount of tokens raised
   uint256 private _tokensRaised;
 
   // Address of the wallet containing YAC tokens to be bought
@@ -121,7 +119,7 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
   }
 
   /**
-   * @return the amount of wei raised.
+   * @return the amount of tokens raised.
    */
   function tokensRaised() public view returns (uint256) {
     return _tokensRaised;

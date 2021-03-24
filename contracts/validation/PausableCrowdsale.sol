@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.3;
 
 import "../Crowdsale.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
