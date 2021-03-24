@@ -19,9 +19,12 @@ describe('WhitelistCrowdsale', function () {
   const additionalLockPeriod = 100
 
   let owner: Signer
+  let notWhitelisted: Signer
   let whitelisted: Signer
-  let otherWhitelisted: Signer
-  let other: Signer
+  let secondWhitelisted: Signer
+  let thirdWhitelisted: Signer
+  let fourthWhitelisted: Signer
+  let fifthWhitelisted: Signer
   let yac: ERC20Mock
   let crowdsale: YacoobaCrowdsale
   let openingTime: BigNumber
@@ -30,7 +33,15 @@ describe('WhitelistCrowdsale', function () {
   before(async function () {
     // Advance to the next block to correctly read time in the solidity "now" function interpreted by ganache
     await advanceBlock()
-    ;[owner, whitelisted, otherWhitelisted, other] = await ethers.getSigners()
+    ;[
+      owner,
+      notWhitelisted,
+      whitelisted,
+      secondWhitelisted,
+      thirdWhitelisted,
+      fourthWhitelisted,
+      fifthWhitelisted,
+    ] = await ethers.getSigners()
     const ownerAddress = await owner.getAddress()
 
     openingTime = (await latest()).add(duration.weeks(1))
@@ -76,32 +87,38 @@ describe('WhitelistCrowdsale', function () {
 
   context('With no whitelisted addresses', function () {
     it('Should reject all purchases', async function () {
-      await purchaseExpectRevert(other, value)
+      await purchaseExpectRevert(notWhitelisted, value)
       await purchaseExpectRevert(whitelisted, value)
     })
   })
 
   context('With whitelisted addresses', function () {
     before(async function () {
-      const whitelistedAddress = await whitelisted.getAddress()
-      const otherWhitelistedAddress = await otherWhitelisted.getAddress()
-      await crowdsale.grantRole(BENEFICIARY_ROLE, whitelistedAddress)
-      await crowdsale.grantRole(BENEFICIARY_ROLE, otherWhitelistedAddress)
+      await crowdsale.grantRole(BENEFICIARY_ROLE, await whitelisted.getAddress())
+      await crowdsale.grantRoles(BENEFICIARY_ROLE, [
+        await secondWhitelisted.getAddress(),
+        await thirdWhitelisted.getAddress(),
+        await fourthWhitelisted.getAddress(),
+        await fifthWhitelisted.getAddress(),
+      ])
       await increaseTo(openingTime.add(duration.seconds(1)))
     })
 
     it('Should accept purchases with whitelisted beneficiaries', async function () {
       await purchaseShouldSucceed(whitelisted, value)
-      await purchaseShouldSucceed(otherWhitelisted, value)
+      await purchaseShouldSucceed(secondWhitelisted, value)
+      await purchaseShouldSucceed(thirdWhitelisted, value)
+      await purchaseShouldSucceed(fourthWhitelisted, value)
+      await purchaseShouldSucceed(fifthWhitelisted, value)
     })
 
     it('Should reject if purchases from whitelisted addresses with non-whitelisted beneficiaries', async function () {
-      const otherAdd = await other.getAddress()
-      await expect(crowdsale.connect(whitelisted).buyTokens(otherAdd, { value })).to.be.reverted
+      const notWhitelistedAdd = await notWhitelisted.getAddress()
+      await expect(crowdsale.connect(whitelisted).buyTokens(notWhitelistedAdd, { value })).to.be.reverted
     })
 
     it('Should reject purchases with non-whitelisted beneficiaries', async function () {
-      await purchaseExpectRevert(other, value)
+      await purchaseExpectRevert(notWhitelisted, value)
     })
   })
 })
