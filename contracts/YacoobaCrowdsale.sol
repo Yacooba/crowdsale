@@ -54,6 +54,10 @@ contract YacoobaCrowdsale is
     override(PausableCrowdsale, CappedCrowdsale, Crowdsale, TimedCrowdsale, WhitelistCrowdsale)
   {
     super._preValidatePurchase(beneficiary, tokenAmount);
+    uint256 _existingContribution = balanceOf(beneficiary);
+    uint256 _newContribution = _existingContribution + tokenAmount;
+    require(_newContribution >= beneficiaryMinCap(), "CC: beneficiary min cap not met");
+    require(_newContribution <= beneficiaryMaxCap(), "CC: contributing above beneficiary max cap");
   }
 
   function _processPurchase(address beneficiary, uint256 tokenAmount) internal override(Crowdsale, TokenLockCrowdsale) {

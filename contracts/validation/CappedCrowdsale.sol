@@ -6,19 +6,18 @@ import "../Crowdsale.sol";
 
 /**
  * @title CappedCrowdsale
- * @dev Crowdsale with a limit for total contributions.
+ * @dev Establish limits on ERC20 tokens sold during the crowdsale.
  */
 abstract contract CappedCrowdsale is Crowdsale {
   uint256 private _cap;
   uint256 private _beneficiaryMinCap;
   uint256 private _beneficiaryMaxCap;
-  mapping(address => uint256) private _contributions;
 
   /**
-   * @dev Constructor, takes maximum amount of wei accepted in the crowdsale.
-   * @param newCap Max amount of wei to be contributed
-   * @param newBeneficiaryMinCap Minimum amount of tokens a beneficiary can purchase
-   * @param newBeneficiaryMaxCap Maximum amount of tokens a beneficiary can purchase
+   * @dev Sets the limits on ERC20 tokens sold during the crowdsale.
+   * @param newCap Max amount of ERC20 tokens to be purchased.
+   * @param newBeneficiaryMinCap Minimum amount of tokens a beneficiary can purchase.
+   * @param newBeneficiaryMaxCap Maximum amount of tokens a beneficiary can purchase.
    */
   constructor(
     uint256 newCap,
@@ -61,17 +60,12 @@ abstract contract CappedCrowdsale is Crowdsale {
   }
 
   /**
-   * @dev Extend parent behavior requiring purchase to respect the funding cap.
+   * @dev Extend parent behavior requiring beneficiary to respect the funding cap.
    * @param beneficiary Token purchaser
    * @param tokenAmount Amount of wei contributed
    */
   function _preValidatePurchase(address beneficiary, uint256 tokenAmount) internal virtual override {
     super._preValidatePurchase(beneficiary, tokenAmount);
-    uint256 _existingContribution = _contributions[beneficiary];
-    uint256 _newContribution = _existingContribution + tokenAmount;
-    require(_newContribution >= _beneficiaryMinCap, "CC: beneficiary min cap not met");
-    require(_newContribution <= _beneficiaryMaxCap, "CC: contributing above beneficiary max cap");
-    _contributions[beneficiary] = _newContribution;
     require(tokensRaised() + tokenAmount <= _cap, "CC: cap exceeded");
   }
 }
