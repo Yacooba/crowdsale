@@ -187,6 +187,15 @@ describe('YacoobaCrowdsale', function () {
       expect(await crowdsale.balanceOf(beneficiaryAddress)).to.eq(valueYacs)
     })
 
+    it('Should buy tokens from the crowdsale when sending funds to the contract', async () => {
+      expect(await crowdsale.balanceOf(beneficiaryAddress)).to.eq(0)
+      expect(await beneficiary.sendTransaction({ to: crowdsale.address, value: valueEther })).to.emit(
+        crowdsale,
+        'TokensPurchased',
+      )
+      expect(await crowdsale.balanceOf(beneficiaryAddress)).to.eq(valueYacs)
+    })
+
     it('Should buy tokens multiple times from the crowdsale', async () => {
       expect(await crowdsale.balanceOf(beneficiaryAddress)).to.eq(0)
       await crowdsale.buyTokens(beneficiaryAddress, { value: valueEther })

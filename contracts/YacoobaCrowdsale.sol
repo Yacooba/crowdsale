@@ -49,11 +49,19 @@ contract YacoobaCrowdsale is
     // solhint-disable-previous-line no-empty-blocks
   }
 
+  /**
+   * @dev Extend parent behavior requiring beneficiary to respect the beneficiary caps.
+   * @param beneficiary Token beneficiary
+   * @param tokenAmount Amount of tokens bought
+   */
   function _preValidatePurchase(address beneficiary, uint256 tokenAmount)
     internal
     override(PausableCrowdsale, CappedCrowdsale, Crowdsale, TimedCrowdsale, WhitelistCrowdsale)
   {
     super._preValidatePurchase(beneficiary, tokenAmount);
+    uint256 _existingBalance = balanceOf(beneficiary);
+    require((_existingBalance + tokenAmount) >= beneficiaryMinCap(), "CC: beneficiary min cap not met");
+    require((_existingBalance + tokenAmount) <= beneficiaryMaxCap(), "CC: contributing above beneficiary max cap");
   }
 
   function _processPurchase(address beneficiary, uint256 tokenAmount) internal override(Crowdsale, TokenLockCrowdsale) {

@@ -15,10 +15,10 @@ abstract contract PausableCrowdsale is Crowdsale, Pausable {
    * Use super to concatenate validations.
    * Adds the validation that the crowdsale must not be paused.
    * @param _beneficiary Address performing the token purchase
-   * @param _weiAmount Value in wei involved in the purchase
+   * @param tokenAmount Amount of tokens bought
    */
-  function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal virtual override whenNotPaused {
-    return super._preValidatePurchase(_beneficiary, _weiAmount);
+  function _preValidatePurchase(address _beneficiary, uint256 tokenAmount) internal virtual override whenNotPaused {
+    return super._preValidatePurchase(_beneficiary, tokenAmount);
   }
 
   /**

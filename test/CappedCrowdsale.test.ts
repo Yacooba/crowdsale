@@ -56,6 +56,10 @@ describe('CappedCrowdsale', function () {
     closingTime = openingTime.add(duration.weeks(1))
   })
 
+  async function purchaseShouldSucceed(beneficiary: string, value: BigNumber) {
+    await expect(crowdsale.buyTokens(beneficiary, { value: value })).to.emit(crowdsale, 'TokensPurchased')
+  }
+
   describe('Contract deploy', function () {
     it('Should fail if a cap equals zero', async () => {
       const Crowdsale = await ethers.getContractFactory('YacoobaCrowdsale')
@@ -104,12 +108,8 @@ describe('CappedCrowdsale', function () {
       })
 
       it('Should accept multiple payments within cap', async () => {
-        await expect(signer.sendTransaction({ to: crowdsale.address, value: lessThanCap })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
-        await expect(crowdsale.buyTokens(signerAddress, { value: lessThanCap })).to.emit(crowdsale, 'TokensPurchased')
-        await expect(crowdsale.buyTokens(signerAddress, { value: lessThanCap })).to.emit(crowdsale, 'TokensPurchased')
+        await purchaseShouldSucceed(signerAddress, lessThanCap)
+        await purchaseShouldSucceed(signerAddress, lessThanCap)
       })
 
       it('Should reject payments outside cap', async () => {
@@ -121,24 +121,24 @@ describe('CappedCrowdsale', function () {
       })
 
       it('Should reject payments that exceed cap', async () => {
-        await crowdsale.buyTokens(signerAddress, { value: capInEther })
+        await purchaseShouldSucceed(signerAddress, capInEther)
         await expect(crowdsale.buyTokens(otherSignerAddress, { value: lessThanCap })).to.be.revertedWith(
           'CC: cap exceeded',
         )
       })
 
       it('Should not reach cap if sent under cap', async () => {
-        await crowdsale.buyTokens(signerAddress, { value: lessThanCap })
+        await purchaseShouldSucceed(signerAddress, lessThanCap)
         expect(await crowdsale.capReached()).to.eq(false)
       })
 
       it('Should not reach cap if sent just under cap', async () => {
-        await crowdsale.buyTokens(signerAddress, { value: capInEther.sub(1) })
+        await purchaseShouldSucceed(signerAddress, capInEther.sub(1))
         expect(await crowdsale.capReached()).to.eq(false)
       })
 
       it('Should reach cap if cap sent', async () => {
-        await crowdsale.buyTokens(signerAddress, { value: capInEther })
+        await purchaseShouldSucceed(signerAddress, capInEther)
         expect(await crowdsale.capReached()).to.eq(true)
       })
     })
@@ -171,28 +171,16 @@ describe('CappedCrowdsale', function () {
         await increaseTo(openingTime.add(duration.seconds(1)))
       })
       it('Should accept payments within beneficiary min and max cap', async () => {
-        expect(await crowdsale.buyTokens(signerAddress, { value: withinBeneficiaryMinMaxCap })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
-        expect(await crowdsale.buyTokens(signerAddress, { value: withinBeneficiaryMinMaxCap })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
+        await purchaseShouldSucceed(signerAddress, withinBeneficiaryMinMaxCap)
+        await purchaseShouldSucceed(signerAddress, withinBeneficiaryMinMaxCap)
       })
 
       it('Should accept payments equal to beneficiary min cap', async () => {
-        expect(await crowdsale.buyTokens(signerAddress, { value: beneficiaryMinCapETH })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
+        await purchaseShouldSucceed(signerAddress, beneficiaryMinCapETH)
       })
 
       it('Should accept payments equal to beneficiary max cap', async () => {
-        expect(await crowdsale.buyTokens(signerAddress, { value: beneficiaryHardCapETH })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
+        await purchaseShouldSucceed(signerAddress, beneficiaryHardCapETH)
       })
 
       it('Should reject payments outside beneficiary min cap', async () => {
@@ -208,10 +196,7 @@ describe('CappedCrowdsale', function () {
       })
 
       it('Should reject payments that exceed beneficiary max cap', async () => {
-        expect(await crowdsale.buyTokens(signerAddress, { value: beneficiaryHardCapETH })).to.emit(
-          crowdsale,
-          'TokensPurchased',
-        )
+        await purchaseShouldSucceed(signerAddress, beneficiaryHardCapETH)
         await expect(crowdsale.buyTokens(signerAddress, { value: lessThanCap })).to.be.revertedWith(
           'CC: contributing above beneficiary max cap',
         )
