@@ -45,7 +45,7 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
    * @param purchaser who paid for the tokens
    * @param beneficiary who got the tokens
    * @param value weis paid for purchase
-   * @param amount amount of tokens purchasedasdasdasd
+   * @param amount amount of tokens purchased
    */
   event TokensPurchased(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
@@ -165,7 +165,7 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
    *     super._preValidatePurchase(beneficiary, tokenAmount);
    *     require(tokensRaised() + tokenAmount <= cap);
    * @param beneficiary Address performing the token purchase
-   * @param tokenAmount Value in wei involved in the purchase
+   * @param tokenAmount Amount of tokens bought
    */
   function _preValidatePurchase(address beneficiary, uint256 tokenAmount) internal virtual {
     require(beneficiary != address(0), "CS: beneficiary is the zero address");
@@ -177,7 +177,7 @@ contract Crowdsale is Context, ReentrancyGuard, Ownable {
    * @dev Source of tokens. Override this method to modify the way in which the crowdsale ultimately gets and sends
    * its tokens.
    * @param beneficiary Address performing the token purchase
-   * @param tokenAmount Number of tokens to be emitted
+   * @param tokenAmount Number of tokens to be transferred
    */
   function _deliverTokens(address beneficiary, uint256 tokenAmount) internal {
     token().safeTransferFrom(_tokenWallet, beneficiary, tokenAmount);

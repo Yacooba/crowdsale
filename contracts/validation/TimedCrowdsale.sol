@@ -74,7 +74,7 @@ abstract contract TimedCrowdsale is Crowdsale {
   /**
    * @dev Extend parent behavior requiring to be within contributing period.
    * @param beneficiary Token purchaser
-   * @param tokenAmount Amount of wei contributed
+   * @param tokenAmount Amount of tokens bought
    */
   function _preValidatePurchase(address beneficiary, uint256 tokenAmount) internal virtual override onlyWhileOpen {
     super._preValidatePurchase(beneficiary, tokenAmount);
