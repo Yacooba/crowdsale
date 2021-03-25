@@ -49,6 +49,11 @@ contract YacoobaCrowdsale is
     // solhint-disable-previous-line no-empty-blocks
   }
 
+  /**
+   * @dev Extend parent behavior requiring beneficiary to respect the beneficiary caps.
+   * @param beneficiary Token beneficiary
+   * @param tokenAmount Amount of tokens bought
+   */
   function _preValidatePurchase(address beneficiary, uint256 tokenAmount)
     internal
     override(PausableCrowdsale, CappedCrowdsale, Crowdsale, TimedCrowdsale, WhitelistCrowdsale)
