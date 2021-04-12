@@ -48,7 +48,7 @@
     "@typescript-eslint/parser": "^4.19.0",
     "chai": "^4.3.4",
     "dotenv": "^8.2.0",
-    "eslint": "^7.22.0",
+    "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "ethereum-waffle": "^3.3.0",
